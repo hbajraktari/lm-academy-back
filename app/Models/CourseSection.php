@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\CourseModule;
+use App\Models\CourseMaterial;
 use Illuminate\Database\Eloquent\Model;
 
 class CourseSection extends Model
