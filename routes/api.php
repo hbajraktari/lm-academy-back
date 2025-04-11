@@ -2,6 +2,7 @@
 
 use App\Mail\TestMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -50,4 +51,38 @@ Route::post('test-mail-sent', function(Request $request) {
             ]
         ], 500);
     }
+});
+
+Route::get('zen-quote', function() {
+
+    try {
+        $response = Http::get("https://zenquotes.io/api/random");
+
+    if($response->successful()) {
+        $quote = $response->json()[0];
+
+        return response()->json([
+            'success' => true,
+            'quote' => [
+                'text' => $quote['q'],
+                'author' => $quote['a'],
+            ]
+        ]);
+    }
+
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Failed to fetch quote from external API'
+    ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch quote from external API',
+            'error' => 'Failed to fetch quote',
+            'details' => $e->getMessage()
+        ]);
+    }
+
 });
